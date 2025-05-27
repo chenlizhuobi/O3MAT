@@ -127,8 +127,8 @@ if __name__ == "__main__":
     if not os.path.exists(save_path):
         os.makedirs(save_path)
 
-    model_file = r"/DeepLearning/mnt/shixiansheng/data_fusion/output/W126/2011_Model_W126_ST_All.csv"
-    monitor_file = r"/DeepLearning/mnt/shixiansheng/data_fusion/output/W126/2011_Monitor_W126.csv"
+    model_file = r"/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2011_Model_W126_ST_All.csv"
+    monitor_file = r"/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2011_Monitor_W126.csv"
     region_table_file = r"/DeepLearning/mnt/shixiansheng/data_fusion/output/Region/Region_CONUSHarvard.csv"
 
     daily_output_path = os.path.join(save_path, "2011_W126_ST_AtF_True.csv")

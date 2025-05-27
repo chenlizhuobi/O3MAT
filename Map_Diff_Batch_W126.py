@@ -175,7 +175,8 @@ def plot_us_map(
         year = year_x
 
         # Create save path
-        save_path = os.path.join("/DeepLearning/mnt/shixiansheng/data_fusion/output/CompareMap_W126", f"{year}_CompareMap_W126")
+        # save_path = os.path.join("/DeepLearning/mnt/shixiansheng/data_fusion/output/CompareMap_W126", f"{year}_CompareMap_W126")
+        save_path = os.path.join("/DeepLearning/mnt/shixiansheng/data_fusion/output/CompareMap", f"{year}_CompareMap")
         try:
             if not os.path.exists(save_path):
                 os.makedirs(save_path)
@@ -188,7 +189,7 @@ def plot_us_map(
 
         # 创建 Merged_Diff 文件夹
         save_path1 = "/DeepLearning/mnt/shixiansheng/data_fusion/output"
-        merged_diff_path = os.path.join(save_path1, "Merged_HourlyIntoMetrics_Methoddiff")
+        merged_diff_path = os.path.join(save_path1, "Merged_HourlyIntoMetrics_Methoddiff_W126AtF")
         try:
             if not os.path.exists(merged_diff_path):
                 os.makedirs(merged_diff_path)
@@ -320,50 +321,90 @@ def plot_us_map(
 
 if __name__ == "__main__":
     # 输入文件列表
-    fusion_output_files_y = [
-        r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2002_W126_ST_Limit.csv",
-        r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2003_W126_ST_Limit.csv",
-        r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2004_W126_ST_Limit.csv",
-        r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2005_W126_ST_Limit.csv",
-        r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2006_W126_ST_Limit.csv",
-        r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2007_W126_ST_Limit.csv",
-        r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2008_W126_ST_Limit.csv",
-        r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2009_W126_ST_Limit.csv",
-        r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2010_W126_ST_Limit.csv",
-        r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2012_W126_ST_Limit.csv",
-        r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2013_W126_ST_Limit.csv",
-        r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2014_W126_ST_Limit.csv",
-        r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2015_W126_ST_Limit.csv",
-        r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2016_W126_ST_Limit.csv",
-        r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2017_W126_ST_Limit.csv",
-        r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2018_W126_ST_Limit.csv",
-        r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2019_W126_ST_Limit.csv",
-        # 添加更多年份的文件路径
-    ]
-    fusion_output_files_x = [
-        r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2002_W126_ST_Limit.csv",
-        r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2003_W126_ST_Limit.csv",
-        r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2004_W126_ST_Limit.csv",
-        r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2005_W126_ST_Limit.csv",
-        r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2006_W126_ST_Limit.csv",
-        r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2007_W126_ST_Limit.csv",
-        r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2008_W126_ST_Limit.csv",
-        r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2009_W126_ST_Limit.csv",
-        r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2010_W126_ST_Limit.csv",
-        r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2012_W126_ST_Limit.csv",
-        r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2013_W126_ST_Limit.csv",
-        r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2014_W126_ST_Limit.csv",
-        r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2015_W126_ST_Limit.csv",
-        r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2016_W126_ST_Limit.csv",
-        r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2017_W126_ST_Limit.csv",
-        r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2018_W126_ST_Limit.csv",
-        r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2019_W126_ST_Limit.csv",
-        # 添加更多年份的文件路径
-    ]
+
+    #输入的每年FtA的W126文件
+    # fusion_output_files_y = [
+    #     r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2002_W126_ST_Limit.csv",
+    #     r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2003_W126_ST_Limit.csv",
+    #     r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2004_W126_ST_Limit.csv",
+    #     r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2005_W126_ST_Limit.csv",
+    #     r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2006_W126_ST_Limit.csv",
+    #     r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2007_W126_ST_Limit.csv",
+    #     r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2008_W126_ST_Limit.csv",
+    #     r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2009_W126_ST_Limit.csv",
+    #     r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2010_W126_ST_Limit.csv",
+    #     r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2012_W126_ST_Limit.csv",
+    #     r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2013_W126_ST_Limit.csv",
+    #     r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2014_W126_ST_Limit.csv",
+    #     r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2015_W126_ST_Limit.csv",
+    #     r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2016_W126_ST_Limit.csv",
+    #     r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2017_W126_ST_Limit.csv",
+    #     r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2018_W126_ST_Limit.csv",
+    #     r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2019_W126_ST_Limit.csv",
+    #     # 添加更多年份的文件路径
+    # ]
+    # fusion_output_files_x = [
+    #     r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2002_W126_ST_Limit.csv",
+    #     r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2003_W126_ST_Limit.csv",
+    #     r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2004_W126_ST_Limit.csv",
+    #     r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2005_W126_ST_Limit.csv",
+    #     r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2006_W126_ST_Limit.csv",
+    #     r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2007_W126_ST_Limit.csv",
+    #     r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2008_W126_ST_Limit.csv",
+    #     r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2009_W126_ST_Limit.csv",
+    #     r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2010_W126_ST_Limit.csv",
+    #     r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2012_W126_ST_Limit.csv",
+    #     r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2013_W126_ST_Limit.csv",
+    #     r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2014_W126_ST_Limit.csv",
+    #     r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2015_W126_ST_Limit.csv",
+    #     r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2016_W126_ST_Limit.csv",
+    #     r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2017_W126_ST_Limit.csv",
+    #     r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2018_W126_ST_Limit.csv",
+    #     r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2019_W126_ST_Limit.csv",
+    #     # 添加更多年份的文件路径
+    # ]
+
+    #输入的AtF文件
+    fusion_output_files_y = ['/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2002_W126_AtF.csv',
+                    "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2003_W126_AtF.csv",
+                    "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2004_W126_AtF.csv",
+                    "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2005_W126_AtF.csv",
+                    "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2006_W126_AtF.csv",
+                    "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2007_W126_AtF.csv",
+                    "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2008_W126_AtF.csv",
+                "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2009_W126_AtF.csv",
+                 "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2010_W126_AtF.csv",
+                 '/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2011_W126_AtF.csv',
+                 "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2012_W126_AtF.csv",
+                  "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2013_W126_AtF.csv",
+                  "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2014_W126_AtF.csv",
+                   "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2015_W126_AtF.csv",
+                   "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2016_W126_AtF.csv",
+                   "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2017_W126_AtF.csv",
+                   "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2018_W126_AtF.csv",
+                   "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2019_W126_AtF.csv",]
+    fusion_output_files_x = ['/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2002_W126_AtF.csv',
+                    "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2003_W126_AtF.csv",
+                    "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2004_W126_AtF.csv",
+                    "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2005_W126_AtF.csv",
+                    "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2006_W126_AtF.csv",
+                    "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2007_W126_AtF.csv",
+                    "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2008_W126_AtF.csv",
+                "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2009_W126_AtF.csv",
+                 "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2010_W126_AtF.csv",
+                 '/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2011_W126_AtF.csv',
+                 "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2012_W126_AtF.csv",
+                  "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2013_W126_AtF.csv",
+                  "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2014_W126_AtF.csv",
+                   "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2015_W126_AtF.csv",
+                   "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2016_W126_AtF.csv",
+                   "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2017_W126_AtF.csv",
+                   "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2018_W126_AtF.csv",
+                   "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2019_W126_AtF.csv",]
     # 其他代码
     model_file = r"/backupdata/data_EPA/EQUATES/EQUATES_data/HR2DAY_LST_ACONC_v532_cb6r3_ae7_aq_WR413_MYR_STAGE_2011_12US1_2011.nc"
 
-    variables = ['model', 'vna_ozone', 'evna_ozone', 'avna_ozone', 'ds_ozone']
+    variables = ['model', 'vna_ozone', 'evna_ozone', 'avna_ozone']
     comparisons = list(itertools.combinations(variables, 2))
 
     # 为每个对比设置独立的绘图参数（统一设置）
@@ -371,7 +412,7 @@ if __name__ == "__main__":
         'default': {
             'is_delta': True,
             'cmap_delta': cmaps.ViBlGrWhYeOrRe,
-            'unit': "ppbv",
+            'unit': "ppm-hrs",
             'cmap_conc': cmaps.WhiteBlueGreenYellowRed,
            'show_lonlat': True,
             'is_wrf_out_data': True,

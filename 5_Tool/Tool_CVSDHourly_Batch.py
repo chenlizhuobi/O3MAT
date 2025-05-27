@@ -2,14 +2,14 @@ import pandas as pd
 import os
 
 # 指定年份列表
-years = [2011]
+years = [2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010,2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019]
 
 # 假设参与计算的列，你需要根据实际情况修改
 # colums_W126
 columns_to_calculate = ['model', 'vna_ozone', 'evna_ozone', 'avna_ozone']
 
 # 输出文件夹路径
-output_folder = '/DeepLearning/mnt/shixiansheng/data_fusion/output/DailyData_WithoutCV'
+output_folder = '/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF'
 # 创建输出文件夹（如果不存在）
 os.makedirs(output_folder, exist_ok=True)
 
@@ -17,6 +17,7 @@ os.makedirs(output_folder, exist_ok=True)
 for year in years:
     # 数据文件路径
     data_path = f"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/{year}_W126_ST_Limit.csv"
+    data_path = f"/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/{year}_W126_AtF.csv"
 
     try:
         # 读取数据
@@ -50,7 +51,7 @@ for year in years:
         result_df = pd.DataFrame(results, columns=['ROW', 'COL', 'SD', 'CV', 'Period', 'Year'])
 
         # 保存当前年份的结果到文件
-        output_file = os.path.join(output_folder, f'{year}_CVSD_HourlyMetrics.csv')
+        output_file = os.path.join(output_folder, f'{year}_CVSD_HourlyMetrics_AtF.csv')
         result_df.to_csv(output_file, index=False)
         print(f"年份 {year} 的结果已保存到 {output_file}")
     except FileNotFoundError:

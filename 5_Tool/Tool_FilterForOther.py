@@ -15,7 +15,7 @@ def filter_data(df_is, df_input):
         filter_df = df_is[df_is['Is'] != 1][['ROW', 'COL']]
         # 使用 merge 函数进行条件筛选
         merged = pd.merge(df_input, filter_df, on=['ROW', 'COL'], how='left', indicator=True)
-        columns_to_update = ['model']
+        columns_to_update = ['model','vna_ozone','evna_ozone','avna_ozone']
         df_input.loc[merged['_merge'] == 'both', columns_to_update] = None
         return df_input
     except KeyError:
@@ -39,11 +39,11 @@ if __name__ == "__main__":
         exit(1)
 
     # 指定年份列表
-    years = [2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019]
+    years = [2011]
     for year in years:
         # 动态构建输入和输出文件路径
-        input_table_path = f'/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/{year}_W126_AtF.csv'
-        output_path = f'/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/{year}_W126_AtF.csv'
+        input_table_path = f'/DeepLearning/mnt/shixiansheng/data_fusion/output/Data_OTHER/2011_Other/{year}_HarvardBased_AtF.csv'
+        output_path = f'/DeepLearning/mnt/shixiansheng/data_fusion/output/Data_OTHER/2011_Other/{year}_HarvardBased_AtF.csv.csv'
 
         # 读取输入数据表
         df_input = read_csv_file(input_table_path)

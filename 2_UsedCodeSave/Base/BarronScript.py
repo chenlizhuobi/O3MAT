@@ -12,6 +12,7 @@ from esil.rsm_helper.model_property import model_attribute
 from esil.map_helper import get_multiple_data, show_maps
 import cmaps
 import xarray as xr
+import multiprocessing  # 用于获取CPU核心数
 
 cmap_conc = cmaps.WhiteBlueGreenYellowRed
 cmap_delta = cmaps.ViBlGrWhYeOrRe
@@ -162,8 +163,8 @@ def start_period_averaged_data_fusion(model_file, monitor_file, file_path, dict_
                 df_avg_obs[["x", "y"]],
                 df_avg_obs[[monitor_pollutant, "mod", "bias", "r_n"]]
             )
-
-            zdf = nn.predict(df_prediction[["COL", "ROW"]].values)
+            njobs = multiprocessing.cpu_count()
+            zdf = nn.predict(df_prediction[["COL", "ROW"]].values,njobs=njobs)
             df_prediction["vna_ozone"], df_prediction["vna_mod"], df_prediction["vna_bias"], df_prediction["vna_r_n"] = zdf.T
 
             df_fusion = df_prediction.set_index(["ROW", "COL"]).to_xarray()
@@ -409,62 +410,62 @@ def save_daily_data_fusion_to_metrics(df_data, save_path, project_name):
 
 
 if __name__ == "__main__":
-    save_path = r"/DeepLearning/mnt/shixiansheng/data_fusion/output"
+    save_path = r"/DeepLearning/mnt/shixiansheng/data_fusion/output/Data_OTHER/2011_Other"
     if not os.path.exists(save_path):
         os.makedirs(save_path)
 
-    output_file_name = "BarronScriptHarvard_ALL_2011_AtFdaily.csv"
+    output_file_name = "2011_HarvardBased_AtFdaily.csv"
     output_file_path = os.path.join(save_path, output_file_name)
-    output_file_name_season = "BarronScript_ALL_2011_AtFIndex.csv"
+    output_file_name_season = "2011_HarvardBased_AtF.csv"
 
     model_file = r"/backupdata/data_EPA/Harvard/unzipped_tifs/Harvard_O3MDA8_Regridded_grid_center_2011_12km.nc"
     # model_file = r"/backupdata/data_EPA/EQUATES/EQUATES_data/HR2DAY_LST_ACONC_v532_cb6r3_ae7_aq_WR413_MYR_STAGE_2011_12US1_2011.nc"
     # monitor_file = r"/backupdata/data_EPA/EQUATES/EQUATES_data/ds.input.aqs.o3.2011.csv"
-    monitor_file = r"/DeepLearning/mnt/shixiansheng/data_fusion/output/ds.input.aqs.o3.2011_FilterLatLon.csv"
+    monitor_file = r"/backupdata/data_EPA/EQUATES/EQUATES_data/ds.input.aqs.o3.2011.csv"
 
     # 测试 先融合后均值
-# 测试 先融合后均值
-    daily_output_path = os.path.join(save_path, "BarronScriptHarvard_ALL_2011_FtAdaily.csv")
-    start_daily_data_fusion(
+# # 测试 先融合后均值
+#     daily_output_path = os.path.join(save_path, "BarronScriptHarvard_ALL_2011_FtAdaily.csv")
+#     start_daily_data_fusion(
+#         model_file,
+#         monitor_file,
+#         daily_output_path,
+#         monitor_pollutant="Conc",
+#         model_pollutant="MDA8_O3"
+#     )
+#     daily_output_path = os.path.join(save_path, "BarronScript_ALL_2011_FtAdaily.csv")
+#     # 动态生成先融合后均值的指标文件名称
+#     daily_index_file_name = daily_output_path.replace("FtAdaily.csv", "FtAIndex.csv")
+#     daily_data_fusion_file = daily_output_path
+#     daily_data=pd.read_csv(daily_data_fusion_file)
+#     # 将先融合后均值的结果处理为相应的指标
+#     daily_file_list = save_daily_data_fusion_to_metrics(daily_data, save_path, project_name="BarronHarvard_ALL_2011_FtAIndex")
+
+
+    # 测试 先均值后融合
+    seasonal_output_path = os.path.join(save_path, "2011_HarvardBased_AtF.csv")
+    start_period_averaged_data_fusion(
         model_file,
         monitor_file,
-        daily_output_path,
+        seasonal_output_path,
+        monitor_pollutant="Conc",
+        model_pollutant="MDA8_O3",
+        dict_period={
+            "DJF_2011": ["2011-12-01", "2011-02-28"],
+            "MAM_2011": ["2011-03-01", "2011-05-31"],
+            "JJA_2011": ["2011-06-01", "2011-08-31"],
+            "SON_2011": ["2011-09-01", "2011-11-30"],
+            "Annual_2011": ["2011-01-01", "2011-12-31"],
+            "Apr-Sep_2011": ["2011-04-01", "2011-09-30"]
+        }
+    )
+    print("Done!")
+
+    seasonal_output_path = os.path.join(save_path, "2011_HarvardBased_AtF.csv")
+    start_top_Av_DF(
+        model_file,
+        monitor_file,
+        seasonal_output_path,
         monitor_pollutant="Conc",
         model_pollutant="MDA8_O3"
     )
-    daily_output_path = os.path.join(save_path, "BarronScript_ALL_2011_FtAdaily.csv")
-    # 动态生成先融合后均值的指标文件名称
-    daily_index_file_name = daily_output_path.replace("FtAdaily.csv", "FtAIndex.csv")
-    daily_data_fusion_file = daily_output_path
-    daily_data=pd.read_csv(daily_data_fusion_file)
-    # 将先融合后均值的结果处理为相应的指标
-    daily_file_list = save_daily_data_fusion_to_metrics(daily_data, save_path, project_name="BarronHarvard_ALL_2011_FtAIndex")
-
-
-    # # 测试 先均值后融合
-    # seasonal_output_path = os.path.join(save_path, "Test_FilterlatLon.csv")
-    # start_period_averaged_data_fusion(
-    #     model_file,
-    #     monitor_file,
-    #     seasonal_output_path,
-    #     monitor_pollutant="Conc",
-    #     model_pollutant="MDA8_O3",
-    #     dict_period={
-    #         "DJF_2011": ["2011-12-01", "2011-02-28"],
-    #         "MAM_2011": ["2011-03-01", "2011-05-31"],
-    #         "JJA_2011": ["2011-06-01", "2011-08-31"],
-    #         "SON_2011": ["2011-09-01", "2011-11-30"],
-    #         # "Annual_2011": ["2011-01-01", "2011-12-31"],
-    #         # "Apr-Sep_2011": ["2011-04-01", "2011-09-30"]
-    #     }
-    # )
-    # print("Done!")
-
-    # seasonal_output_path = os.path.join(save_path, "BarronHarvard_ALL_2011_AtFtop.csv")
-    # start_top_Av_DF(
-    #     model_file,
-    #     monitor_file,
-    #     seasonal_output_path,
-    #     monitor_pollutant="Conc",
-    #     model_pollutant="MDA8_O3"
-    # )

@@ -103,9 +103,14 @@ def plot_us_map(
     if not year:
         print("Could not extract year from the filename.")
         return
-
+    
+    #正常路径
     save_path = os.path.join("/DeepLearning/mnt/shixiansheng/data_fusion/output/AloneMap_CVSD", f"{year}_CVSDMap")
-    merged_path = os.path.join("/DeepLearning/mnt/shixiansheng/data_fusion/output", "Merged_CVSD_W126")
+    merged_path = os.path.join("/DeepLearning/mnt/shixiansheng/data_fusion/output", "Merged_CVSD_W126_AtF")
+
+    #特殊路径
+    save_path = os.path.join("/DeepLearning/mnt/shixiansheng/data_fusion/output/AloneMap_CVSD_W126", f"{year}_CVSDMap_W126")
+    merged_path = os.path.join("/DeepLearning/mnt/shixiansheng/data_fusion/output", "Merged_CVSD_W126_FtA")
     try:
         if not os.path.exists(save_path):
             os.makedirs(save_path)
@@ -141,12 +146,17 @@ def plot_us_map(
 
             grid_concentration = df_period[variable].values.reshape(longitudes.shape)
 
-            # 根据周期设置 value_range
-            value_range = variable_settings['settings'].get('value_range')
+            # 根据变量和周期设置不同的value_range和unit
+            var_settings = variable_settings['settings'].get(variable, {})
+            value_range = var_settings.get('value_range')
+            unit = var_settings.get('unit')
+            
+            # 针对特定周期的特殊设置
             if key_period == 'top-10':
-                # 这里设置 top-10 周期的独立 value_range，可根据需要修改
-                value_range = (0, 7)
-            elif value_range is None:
+                value_range = var_settings.get('value_range_top10', (0, 7))
+            
+            # 如果没有为该变量设置value_range，则使用通用计算方法
+            if value_range is None:
                 vmax_conc = np.nanpercentile(grid_concentration, 99.5)
                 vmin_conc = np.nanpercentile(grid_concentration, 0.5)
                 value_range = (vmin_conc, vmax_conc)
@@ -166,7 +176,7 @@ def plot_us_map(
 
             fig = show_maps(
                 dict_data,
-                unit=variable_settings['settings'].get('unit', "ppbv"),
+                unit=unit or variable_settings['settings'].get('unit', "ppbv"),
                 cmap=variable_settings['settings'].get('cmap_conc', cmap_conc),
                 show_lonlat=variable_settings['settings'].get('show_lonlat', False),
                 projection=proj,
@@ -273,6 +283,28 @@ def plot_us_map(
 
 if __name__ == "__main__":
     model_file = r"/backupdata/data_EPA/EQUATES/EQUATES_data/HR2DAY_LST_ACONC_v532_cb6r3_ae7_aq_WR413_MYR_STAGE_2011_12US1_2011.nc"
+
+    #W126_AtF
+    # file_list = [ "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2002_CVSD_HourlyMetrics_AtF.csv",
+    #               "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2003_CVSD_HourlyMetrics_AtF.csv",
+    #               "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2004_CVSD_HourlyMetrics_AtF.csv",
+    #               "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2005_CVSD_HourlyMetrics_AtF.csv",
+    #               "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2006_CVSD_HourlyMetrics_AtF.csv",
+    #               "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2007_CVSD_HourlyMetrics_AtF.csv",
+    #               "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2008_CVSD_HourlyMetrics_AtF.csv",
+    #               "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2009_CVSD_HourlyMetrics_AtF.csv",
+    #               "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2010_CVSD_HourlyMetrics_AtF.csv",
+    #               "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2011_CVSD_HourlyMetrics_AtF.csv",
+    #               "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2012_CVSD_HourlyMetrics_AtF.csv",
+    #               "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2013_CVSD_HourlyMetrics_AtF.csv",
+    #               "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2014_CVSD_HourlyMetrics_AtF.csv",
+    #               "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2015_CVSD_HourlyMetrics_AtF.csv",
+    #               "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2016_CVSD_HourlyMetrics_AtF.csv",
+    #               "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2017_CVSD_HourlyMetrics_AtF.csv",
+    #               "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2018_CVSD_HourlyMetrics_AtF.csv",]
+    # file_list = ["/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2019_CVSD_HourlyMetrics_AtF.csv"]
+    
+    #FtA数据CVSD
     file_list = [ "/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2002_CVSD_HourlyMetrics.csv",
                   "/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2003_CVSD_HourlyMetrics.csv",
                   "/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2004_CVSD_HourlyMetrics.csv",
@@ -294,28 +326,41 @@ if __name__ == "__main__":
     # special metrics
     # key_periods = ['DJF']
     # key_periods = ['W126']
-    key_periods = ['DJF', 'MAM', 'JJA', 'SON', 'Annual', 'Apr-Sep', 'top-10']
     key_periods = ['W126']
 
+    # 通用设置（所有变量共享）
     common_settings = {
-        'unit': "%",
-        'cmap_conc': cmaps.WhiteBlueGreenYellowRed,
-       'show_lonlat': True,
+        'cmap_conc': cmaps.WhiteBlueGreenYellowRed,  # 所有变量使用相同色标
+        'show_lonlat': True,
         'is_wrf_out_data': True,
-       'show_original_grid': True,
+        'show_original_grid': True,
         'panel_layout': None,
         'title_fontsize': 11,
         'xy_title_fontsize': 9,
-       'show_dependenct_colorbar': True,
-       'show_domain_mean': True,
-       'show_grid_line': True,
-        'value_range': (0, 60),
-        # 'value_range': (None,None),
+        'show_dependenct_colorbar': True,
+        'show_domain_mean': True,
+        'show_grid_line': True,
     }
 
-    variable_settings = {
-        'variables': ['CV'],
-       'settings': common_settings
+    # 变量特定设置
+    variable_specific_settings = {
+        'CV': {
+            'value_range': (0, 60),  # CV的数值范围
+            'unit': "%"  # CV的单位
+        },
+        'SD': {
+            'value_range': (0, 7),  # SD的数值范围
+            'unit': "ppm-hrs"  # SD的单位
+        }
+    }
+
+    # 合并通用设置和变量特定设置
+    all_settings = {
+        'variables': ['CV'],  # 处理CV和SD两个变量
+        'settings': {
+            **common_settings,
+            **variable_specific_settings
+        }
     }
 
     merge_enabled = True
@@ -330,8 +375,7 @@ if __name__ == "__main__":
     }
 
     for file in file_list:
-        plot_us_map(file, model_file, variable_settings=variable_settings, key_periods=key_periods,
+        plot_us_map(file, model_file, variable_settings=all_settings, key_periods=key_periods,
                     merge_enabled=merge_enabled, merge_combinations=merge_combinations,
                     merge_config=merge_config)
     print("Done!")
-    

@@ -5,7 +5,7 @@ from dask import delayed, compute
 import numba
 import calendar
 import matplotlib.pyplot as plt
-
+import os
 
 # 定义需要读取的列
 usecols = ['site_id', 'dateon', 'O3', 'Lat', 'Lon']
@@ -98,8 +98,8 @@ def calculate_single_w126(group):
 
 
 @delayed
-def calculate_w126_metric(df_data, save_path, project_name):
-    print("开始计算 W126 指标...")
+def calculate_w126_metric(df_data, year):
+    print(f"开始计算 {year} 年 W126 指标...")
     # 转换单位，ppbv to ppm
     df_data['O3'] = df_data['O3'] / 1000
     df_data['dateon'] = pd.to_datetime(df_data['dateon'])
@@ -109,49 +109,73 @@ def calculate_w126_metric(df_data, save_path, project_name):
 
     all_w126_metrics = []
     grouped = df_data.groupby(['site_id'])
-    for site_id, group in tqdm(grouped, desc="Processing sites"):
+    for site_id, group in tqdm(grouped, desc=f"Processing {year} sites"):
         task = calculate_single_w126(group)
         result = compute(task)[0]
-        w126_metrics = {'Site': site_id, 'O3': result, 'Lat': group['Lat'].iloc[0], 'Lon': group['Lon'].iloc[0], 'Period': 'W126'}
+        w126_metrics = {'Site': site_id, 'Year': year, 'O3': result, 'Lat': group['Lat'].iloc[0], 'Lon': group['Lon'].iloc[0], 'Period': 'W126'}
         all_w126_metrics.append(w126_metrics)
 
     w126_df = pd.DataFrame(all_w126_metrics)
-    # 按照 O3 列的值从大到小排序
-    w126_df = w126_df.sort_values(by='O3', ascending=False)
-    w126_output_file = f'{save_path}/{project_name}_W126.csv'
-    w126_df[['Site', 'O3', 'Lat', 'Lon', 'Period']].to_csv(w126_output_file, index=False)
-    print(f"W126 指标数据已保存到: {w126_output_file}")
-    print("W126 指标计算完成.")
+    print(f"{year} 年 W126 指标计算完成.")
     return w126_df
 
 
-def save_w126_metrics(save_path, project_name, file_path):
+def save_w126_metrics(save_path, base_file_path, years):
     print("开始保存 W126 指标...")
-
-    # 使用 dask 直接读取 CSV 文件
-    dask_df = pd.read_csv(file_path, usecols=usecols, dtype=dtype)
-
-    print("文件读取完毕。")
-
-    # 延迟计算
-    w126_task = calculate_w126_metric(dask_df, save_path, project_name)
-
-    # 并行计算 W126
-    w126_df = compute(w126_task)[0]
-
-    print("W126 指标保存完成.")
-    return w126_df
+    
+    # 创建保存目录（如果不存在）
+    os.makedirs(save_path, exist_ok=True)
+    
+    # 处理每一年的数据
+    for year in tqdm(years, desc="Processing years"):
+        file_path = base_file_path.format(year=year)
+        print(f"开始读取 {year} 年输入文件: {file_path}")
+        
+        try:
+            # 使用 pandas 读取 CSV 文件
+            df_data = pd.read_csv(file_path, usecols=usecols, dtype=dtype)
+            print(f"{year} 年文件读取完毕，共 {len(df_data)} 条记录")
+            
+            # 检查是否有数据
+            if len(df_data) == 0:
+                print(f"警告: {year} 年文件没有数据，跳过处理")
+                continue
+                
+            # 延迟计算
+            w126_task = calculate_w126_metric(df_data, year)
+            
+            # 执行计算
+            w126_df = compute(w126_task)[0]
+            
+            # 按照 O3 列的值从大到小排序
+            w126_df = w126_df.sort_values(by='O3', ascending=False)
+            
+            # 保存结果，使用简化的命名规则
+            output_file = f'{save_path}/{year}_W126_Monitor.csv'
+            w126_df[['Site', 'Year', 'O3', 'Lat', 'Lon', 'Period']].to_csv(output_file, index=False)
+            print(f"{year} 年 W126 指标数据已保存到: {output_file}")
+            
+        except Exception as e:
+            print(f"错误: 处理 {year} 年数据时出错: {str(e)}")
+            continue
+    
+    print(f"所有 {len(years)} 年的 W126 指标数据已分别保存到: {save_path} 目录下")
+    return True
 
 if __name__ == "__main__":
-    print("开始读取输入文件...")
-    # 读取输入文件
-    file_path = "/backupdata/data_EPA/aq_obs/routine/2011/AQS_hourly_data_2011_LatLon.csv"
-
-    # 定义保存路径和项目名称
-    save_path = r"/DeepLearning/mnt/shixiansheng/data_fusion/output/W126"
-    project_name = "2011_Monitor"
+    print("开始处理多年份数据...")
+    
+    # 定义基础文件路径，使用 {year} 作为年份的占位符
+    base_file_path = "/backupdata/data_EPA/aq_obs/routine/{year}/AQS_hourly_data_{year}_LatLon_filtered.csv"
+    
+    # 定义需要处理的年份列表
+    years = list(range(2013, 2014))  # 处理 2002 到 2019 年的数据
+    
+    # 定义保存路径
+    save_path = r"/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF"
 
     # 调用函数计算指标并保存结果
-    w126_df = save_w126_metrics(save_path, project_name, file_path)
+    success = save_w126_metrics(save_path, base_file_path, years)
 
-    print(f'W126 指标文件已保存到: {save_path}/{project_name}_W126.csv')
+    if success:
+        print(f'所有年份的 W126 指标文件已分别保存到: {save_path} 目录下')

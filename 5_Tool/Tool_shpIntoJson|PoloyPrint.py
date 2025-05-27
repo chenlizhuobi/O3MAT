@@ -34,8 +34,8 @@ def convert_shp_to_json(input_path, output_path):
 
 # 使用示例
 if __name__ == "__main__":
-    input_file = "/DeepLearning/mnt/shixiansheng/data_fusion/output/Region/US_climate_regions.shp"  # 替换为实际的shapefile文件路径
-    output_file = "/DeepLearning/mnt/shixiansheng/data_fusion/output/Region/US_climate_regions.json"  # 替换为期望的输出路径
+    input_file = "/DeepLearning/mnt/shixiansheng/data_fusion/output/Region/CountyRegion/cb_2020_us_county_500k.shp"  # 替换为实际的shapefile文件路径
+    output_file = "/DeepLearning/mnt/shixiansheng/data_fusion/output/Region/CountyRegion/cb_2020_us_county_500k.json"  # 替换为期望的输出路径
     
     convert_shp_to_json(input_file, output_file)
 

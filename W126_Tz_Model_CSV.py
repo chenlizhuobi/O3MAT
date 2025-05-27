@@ -5,29 +5,20 @@ import numba
 
 
 # 定义需要读取的列
-usecols = ['ROW', 'COL', 'Timestamp','model']
+usecols = ['ROW', 'COL', 'Timestamp', 'model']
 
 # 定义每列的数据类型，减少内存使用
 dtype = {
     'ROW': 'int32',
     'COL': 'int32',
     'Timestamp': 'object',
-   'model': 'float32'
+    'model': 'float32'
 }
 
 
 @numba.jit(nopython=True)
 def calculate_weighted_values(values):
     return values / (1 + 4403 * np.exp(-126 * values))
-
-
-@numba.jit(nopython=True)
-def sliding_window_sum(arr, window_size):
-    n = len(arr)
-    result = np.empty(n - window_size + 1)
-    for i in range(n - window_size + 1):
-        result[i] = np.sum(arr[i:i + window_size])
-    return result
 
 
 def calculate_single_w126(group, col_name):
@@ -90,15 +81,14 @@ def calculate_w126_for_grid(grid_group, ozone_columns):
     return w126_metrics
 
 
-def calculate_w126_metric(df_data, save_path, project_name):
-    print("开始计算 W126 指标...")
+def calculate_w126_metric(df_data, save_path, year):
     ozone_columns = ['model']
     # 转换单位，ppbv to ppm
     df_data[ozone_columns] = df_data[ozone_columns] / 1000
 
     # 根据localtime筛选，注意修改年份时间
-    df_2011 = df_data[(df_data['Year'] == 2011)]
-    df_daytime = df_2011[(df_2011['hour'] >= 8) & (df_2011['hour'] < 20)]
+    df_year = df_data[(df_data['Year'] == year)]
+    df_daytime = df_year[(df_year['hour'] >= 8) & (df_year['hour'] < 20)]
 
     grouped = df_daytime.groupby(['ROW', 'COL'])
     num_grids = len(grouped)
@@ -114,45 +104,52 @@ def calculate_w126_metric(df_data, save_path, project_name):
 
     w126_df = pd.DataFrame(all_w126_metrics)
 
-    w126_output_file = f'{save_path}/{project_name}_W126_ST.csv'
-    w126_df[['ROW', 'COL','model', 'Period']].to_csv(w126_output_file, index=False)
+    w126_output_file = f'{save_path}/{year}_W126_EQUATES.csv'
+    w126_df[['ROW', 'COL', 'model', 'Period']].to_csv(w126_output_file, index=False)
     print(f"W126 指标数据已保存到: {w126_output_file}")
-    print("W126 指标计算完成.")
-    return w126_df
+    return w126_output_file
 
 
-def save_w126_metrics(save_path, project_name, file_path, timezone_file):
+def save_w126_metrics(save_path, file_path_base, timezone_file, years):
     print("开始保存 W126 指标...")
-
-    # 使用 dask 直接读取 CSV 文件
-    dask_df = pd.read_csv(file_path, usecols=usecols, dtype=dtype)
     timezone_df = pd.read_csv(timezone_file)
 
     print("文件读取完毕。")
 
-    # 将所有数据转换为本地时间
-    local_df = convert_all_to_local_time(dask_df, timezone_df)
-    print("已完成时间转换为本地时间。")
+    all_files = []
+    for year in years:
+        file_path = f'{file_path_base}/{year}_HourlyData_Limit.csv'
+        print(f"开始读取 {file_path} ...")
+        # 使用 dask 直接读取 CSV 文件
+        dask_df = pd.read_csv(file_path, usecols=usecols, dtype=dtype)
+        print(f"文件 {file_path} 读取完毕。")
 
-    # 计算 W126
-    w126_df = calculate_w126_metric(local_df, save_path, project_name)
+        # 将所有数据转换为本地时间
+        local_df = convert_all_to_local_time(dask_df, timezone_df)
+        print(f"已完成 {year} 年的时间转换为本地时间。")
 
-    print("W126 指标保存完成.")
-    return f'{save_path}/{project_name}_W126_AtF(OceanAndCONUS).csv'
+        # 计算 W126
+        w126_df_file = calculate_w126_metric(local_df, save_path, year)
+        print(f"{year} 年的 W126 指标保存完成.")
+        all_files.append(w126_df_file)
+
+    return all_files
 
 
 if __name__ == "__main__":
     print("开始读取输入文件...")
-    # 读取输入文件
-    file_path = "/DeepLearning/mnt/shixiansheng/data_fusion/output/2011_Data_WithoutCV/2011_SixDataset_Hourly_ST.csv"
-
+    # 定义文件路径的基本部分
+    file_path_base = "/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV"
+    
     # 读取时区偏移表
     timezone_file = '/DeepLearning/mnt/shixiansheng/data_fusion/output/Region/ROWCOLRegion_Tz_(CONUS+Ocean)_ST.csv'
-
-    # 定义保存路径和项目名称
-    save_path = r"/DeepLearning/mnt/shixiansheng/data_fusion/output/2011_Data_WithoutCV"
-    project_name = "2011"
+    
+    # 定义保存路径
+    save_path = r"/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF"
+    
+    # 定义需要处理的年份列表
+    years_to_process = [2019]
 
     # 调用函数计算指标并保存结果
-    output_file = save_w126_metrics(save_path, project_name, file_path, timezone_file)
-    print(f'W126 指标文件已保存到: {output_file}')
+    output_files = save_w126_metrics(save_path, file_path_base, timezone_file, years_to_process)
+    print(f'W126 指标文件已保存到: {output_files}')

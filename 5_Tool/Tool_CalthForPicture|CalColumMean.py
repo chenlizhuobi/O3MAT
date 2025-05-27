@@ -148,11 +148,12 @@ years = [2002,2003,2004,2005,2006,2007,2008,2009,2010,
 
 # 定义要提取的列
 target_columns = ['model', 'vna_ozone', 'evna_ozone', 'avna_ozone']
-target_columns = ['CV']
+target_columns = ['SD']
 
 for year in years:
     # data_path = f'/DeepLearning/mnt/shixiansheng/data_fusion/output/DailyData_WithoutCV_Delta/{year}-2002_Data_WithoutCV_Metrics.csv'
     data_path = f'/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/{year}_CVSD_HourlyMetrics.csv'
+    data_path = f'/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/{year}_CVSD_HourlyMetrics_AtF.csv'
     try:
         # 读取数据文件
         df = pd.read_csv(data_path)
@@ -216,6 +217,7 @@ for period in result_df['Period'].unique():
 print(new_result_df)
 
 # 保存结果到 CSV 文件（可选）
-new_result_df.to_csv('/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/PictureRadius_CV.csv', index=False)
+new_result_df.to_csv('/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/PictureRadius_CV_ForW126AtF.csv', index=False)
+new_result_df.to_csv('/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/PictureRadius_SD_ForW126AtF.csv', index=False)
     
         

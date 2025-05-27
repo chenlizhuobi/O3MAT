@@ -246,24 +246,24 @@ def plot_us_map(
 
 if __name__ == "__main__":
     model_file = r"/backupdata/data_EPA/EQUATES/EQUATES_data/HR2DAY_LST_ACONC_v532_cb6r3_ae7_aq_WR413_MYR_STAGE_2011_12US1_2011.nc"
-    file_list = ['/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2011_W126_ST_Limit.csv',]
-    file_list = ['/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2002_W126_ST_Limit.csv',
-                    "/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2003_W126_ST_Limit.csv",
-                    "/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2004_W126_ST_Limit.csv",
-                    "/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2005_W126_ST_Limit.csv",
-                    "/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2006_W126_ST_Limit.csv",
-                    "/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2007_W126_ST_Limit.csv",
-                    "/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2008_W126_ST_Limit.csv",
-                "/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2009_W126_ST_Limit.csv",
-                 "/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2010_W126_ST_Limit.csv",
-                 '/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2011_W126_ST_Limit.csv',
-                 "/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2012_W126_ST_Limit.csv",
-                  "/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2013_W126_ST_Limit.csv",
-                  "/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2014_W126_ST_Limit.csv",
-                   "/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2015_W126_ST_Limit.csv",
-                   "/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2016_W126_ST_Limit.csv",
-                   "/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2017_W126_ST_Limit.csv",
-                   "/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2018_W126_ST_Limit.csv",]
+    file_list = ['/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2002_W126_AtF.csv',
+                    "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2003_W126_AtF.csv",
+                    "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2004_W126_AtF.csv",
+                    "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2005_W126_AtF.csv",
+                    "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2006_W126_AtF.csv",
+                    "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2007_W126_AtF.csv",
+                    "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2008_W126_AtF.csv",
+                "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2009_W126_AtF.csv",
+                 "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2010_W126_AtF.csv",
+                 '/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2011_W126_AtF.csv',
+                 "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2012_W126_AtF.csv",
+                  "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2013_W126_AtF.csv",
+                  "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2014_W126_AtF.csv",
+                   "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2015_W126_AtF.csv",
+                   "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2016_W126_AtF.csv",
+                   "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2017_W126_AtF.csv",
+                   "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2018_W126_AtF.csv",
+                   "/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/2019_W126_AtF.csv",]
 
     # special metrics
     # key_periods = ['DJF']

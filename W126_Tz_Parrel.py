@@ -100,7 +100,7 @@ def calculate_w126_metric(df_data, save_path, project_name):
     df_data[ozone_columns] = df_data[ozone_columns] / 1000
 
     # 根据localtime筛选，注意修改年份时间
-    df_2011 = df_data[(df_data['Year'] == 2003)]
+    df_2011 = df_data[(df_data['Year'] == 2019)]
     df_daytime = df_2011[(df_2011['hour'] >= 8) & (df_2011['hour'] < 20)]
 
     grouped = df_daytime.groupby(['ROW', 'COL'])
@@ -159,14 +159,14 @@ def save_w126_metrics(save_path, project_name, file_path, timezone_file):
 if __name__ == "__main__":
     print("开始读取输入文件...")
     # 读取输入文件
-    file_path = "/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2003_HourlyData_Limit.csv"
+    file_path = "/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/2019_HourlyData_Limit.csv"
 
     # 读取时区偏移表
     timezone_file = '/DeepLearning/mnt/shixiansheng/data_fusion/output/Region/ROWCOLRegion_Tz_CONUS_ST.csv'
 
     # 定义保存路径和项目名称
     save_path = r"/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV"
-    project_name = "2003"
+    project_name = "2019"
 
     # 调用函数计算指标并保存结果
     output_file = save_w126_metrics(save_path, project_name, file_path, timezone_file)

@@ -100,60 +100,60 @@ if __name__ == "__main__":
 
     # 继续执行数据合并过程
     merge_station_data(station_file, monitor_file, output_file, comparison_file)
-import pandas as pd
+# import pandas as pd
 
-# 定义文件路径
-base_path = '/DeepLearning/mnt/shixiansheng/data_fusion/output/W126'
-file1_path = f'{base_path}/2011_Monitor_W126.csv'
-file2_path = f'{base_path}/2011_Monitor_W126_SMAT.csv'
+# # 定义文件路径
+# base_path = '/DeepLearning/mnt/shixiansheng/data_fusion/output/W126'
+# file1_path = f'{base_path}/2011_Monitor_W126.csv'
+# file2_path = f'{base_path}/2011_Monitor_W126_SMAT.csv'
 
-try:
-    # 读取 CSV 文件
-    df1 = pd.read_csv(file1_path)
-    df2 = pd.read_csv(file2_path)
+# try:
+#     # 读取 CSV 文件
+#     df1 = pd.read_csv(file1_path)
+#     df2 = pd.read_csv(file2_path)
 
-    # 检查两个 DataFrame 中是否都存在 'Site' 列
-    if 'Site' in df1.columns and 'Site' in df2.columns:
-        # 提取 Site 列相同的数据
-        common_sites = df2['Site'].unique()
-        result_df = df1[df1['Site'].isin(common_sites)]
+#     # 检查两个 DataFrame 中是否都存在 'Site' 列
+#     if 'Site' in df1.columns and 'Site' in df2.columns:
+#         # 提取 Site 列相同的数据
+#         common_sites = df2['Site'].unique()
+#         result_df = df1[df1['Site'].isin(common_sites)]
 
-        # 找出在 df2 中存在但在 df1 中不存在的站点
-        missing_sites = df2[~df2['Site'].isin(df1['Site'])]
+#         # 找出在 df2 中存在但在 df1 中不存在的站点
+#         missing_sites = df2[~df2['Site'].isin(df1['Site'])]
 
-        # 确保两个 DataFrame 列名一致，不一致的列用 NaN 填充
-        all_columns = set(df1.columns).union(set(df2.columns))
-        df1 = df1.reindex(columns=all_columns)
-        df2 = df2.reindex(columns=all_columns)
+#         # 确保两个 DataFrame 列名一致，不一致的列用 NaN 填充
+#         all_columns = set(df1.columns).union(set(df2.columns))
+#         df1 = df1.reindex(columns=all_columns)
+#         df2 = df2.reindex(columns=all_columns)
 
-        # 将缺失站点的数据添加到结果中
-        result_df = pd.concat([result_df, missing_sites], ignore_index=True)
+#         # 将缺失站点的数据添加到结果中
+#         result_df = pd.concat([result_df, missing_sites], ignore_index=True)
 
-        # 检查结果数据表中 O3 列是否存在缺失值
-        if 'O3' in result_df.columns and result_df['O3'].hasnans:
-            # 找出 O3 列存在缺失值的站点
-            missing_O3_sites = result_df[result_df['O3'].isna()]['Site'].unique()
-            print("O3 列存在缺失值的站点有:", missing_O3_sites)
+#         # 检查结果数据表中 O3 列是否存在缺失值
+#         if 'O3' in result_df.columns and result_df['O3'].hasnans:
+#             # 找出 O3 列存在缺失值的站点
+#             missing_O3_sites = result_df[result_df['O3'].isna()]['Site'].unique()
+#             print("O3 列存在缺失值的站点有:", missing_O3_sites)
 
-            # 遍历结果数据表中 O3 列的缺失值
-            for index, row in result_df[result_df['O3'].isna()].iterrows():
-                site = row['Site']
-                # 从 2011_Monitor_W126_SMAT.csv 中选取相同 Site 的 O3 值
-                replacement = df2[(df2['Site'] == site) & (~df2['O3'].isna())]['O3'].values
-                if replacement.size > 0:
-                    result_df.at[index, 'O3'] = replacement[0]
+#             # 遍历结果数据表中 O3 列的缺失值
+#             for index, row in result_df[result_df['O3'].isna()].iterrows():
+#                 site = row['Site']
+#                 # 从 2011_Monitor_W126_SMAT.csv 中选取相同 Site 的 O3 值
+#                 replacement = df2[(df2['Site'] == site) & (~df2['O3'].isna())]['O3'].values
+#                 if replacement.size > 0:
+#                     result_df.at[index, 'O3'] = replacement[0]
 
-        # 保存为新的数据表
-        new_file_path = f'{base_path}/2011_Monitor_W126_SameSiteWithSMATAddMissing.csv'
-        result_df.to_csv(new_file_path, index=False)
-        print(f"数据已成功保存到 {new_file_path}")
-    else:
-        print("其中一个文件中不存在 'Site' 列。")
+#         # 保存为新的数据表
+#         new_file_path = f'{base_path}/2011_Monitor_W126_SameSiteWithSMATAddMissing.csv'
+#         result_df.to_csv(new_file_path, index=False)
+#         print(f"数据已成功保存到 {new_file_path}")
+#     else:
+#         print("其中一个文件中不存在 'Site' 列。")
 
-except FileNotFoundError:
-    print("错误：文件未找到，请检查文件路径是否正确。")
-except Exception as e:
-    print(f"发生未知错误：{e}")
+# except FileNotFoundError:
+#     print("错误：文件未找到，请检查文件路径是否正确。")
+# except Exception as e:
+#     print(f"发生未知错误：{e}")
     
     
     

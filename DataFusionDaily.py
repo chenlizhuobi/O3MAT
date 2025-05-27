@@ -144,28 +144,28 @@ def save_daily_data_fusion_to_metrics(df_data, save_path, project_name):
     # 初始化一个空的 DataFrame 来存储所有指标
     all_metrics = []
 
-    # 98th percentile of MDA8 ozone concentration
-    df_data_98th_percentile = df_data.groupby(["ROW", "COL"]).agg(
-        {'vna_ozone': lambda x: x.quantile(0.98),
-         'evna_ozone': lambda x: x.quantile(0.98),
-         'avna_ozone': lambda x: x.quantile(0.98),
-        'model': lambda x: x.quantile(0.98)}
-    ).reset_index()
-    df_data_98th_percentile["Period"] = f"98th"
-    all_metrics.append(df_data_98th_percentile)
+    # # 98th percentile of MDA8 ozone concentration
+    # df_data_98th_percentile = df_data.groupby(["ROW", "COL"]).agg(
+    #     {'vna_ozone': lambda x: x.quantile(0.98),
+    #      'evna_ozone': lambda x: x.quantile(0.98),
+    #      'avna_ozone': lambda x: x.quantile(0.98),
+    #     'model': lambda x: x.quantile(0.98)}
+    # ).reset_index()
+    # df_data_98th_percentile["Period"] = f"98th"
+    # all_metrics.append(df_data_98th_percentile)
 
     # top-10 average of MDA8 ozone days
-    def top_10_average(series):
-        return series.nlargest(10).mean()
+    # def top_10_average(series):
+    #     return series.nlargest(10).mean()
 
-    df_data_top_10_avg = df_data.groupby(["ROW", "COL"]).agg(
-        {'vna_ozone': top_10_average,
-         'evna_ozone': top_10_average,
-         'avna_ozone': top_10_average,
-        'model': top_10_average}
-    ).reset_index()
-    df_data_top_10_avg["Period"] = f"top-10"
-    all_metrics.append(df_data_top_10_avg)
+    # df_data_top_10_avg = df_data.groupby(["ROW", "COL"]).agg(
+    #     {'vna_ozone': top_10_average,
+    #      'evna_ozone': top_10_average,
+    #      'avna_ozone': top_10_average,
+    #     'model': top_10_average}
+    # ).reset_index()
+    # df_data_top_10_avg["Period"] = f"top-10"
+    # all_metrics.append(df_data_top_10_avg)
 
     # Annual average of MDA8
     df_data_annual_avg = df_data.groupby(["ROW", "COL", 'Year']).agg(
@@ -221,26 +221,27 @@ def save_daily_data_fusion_to_metrics(df_data, save_path, project_name):
 # 在 main 函数中调用
 if __name__ == "__main__":
     save_path = r"/DeepLearning/mnt/shixiansheng/data_fusion/output/2011_Data_WithoutCV"
+    save_path = r"/DeepLearning/mnt/shixiansheng/data_fusion/output/Data_OTHER/2011_Other"
     if not os.path.exists(save_path):
         os.makedirs(save_path)
 
-    model_file = r"/backupdata/data_EPA/EQUATES/EQUATES_data/HR2DAY_LST_ACONC_v532_cb6r3_ae7_aq_WR413_MYR_STAGE_2011_12US1_2011.nc"
-    # model_file = r"/backupdata/data_EPA/Harvard/unzipped_tifs/Harvard_O3MDA8_Regridded_grid_center_2011_12km.nc"
-    monitor_file = r"/backupdata/data_EPA/EQUATES/EQUATES_data/ds.input.aqs.o3.2011_Exsame.csv"
+    # model_file = r"/backupdata/data_EPA/EQUATES/EQUATES_data/HR2DAY_LST_ACONC_v532_cb6r3_ae7_aq_WR413_MYR_STAGE_2011_12US1_2011.nc"
+    model_file = r"/backupdata/data_EPA/Harvard/unzipped_tifs/Harvard_O3MDA8_Regridded_grid_center_2011_12km.nc"
+    monitor_file = r"/backupdata/data_EPA/EQUATES/EQUATES_data/ds.input.aqs.o3.2011.csv"
     region_table_file = r"/DeepLearning/mnt/shixiansheng/data_fusion/output/Region/Region_CONUSHarvard.csv"  # 替换为实际的包含 Is 列的数据表文件路径
 
     # 指定日期范围
     start_date = '2011-01-01'
     end_date = '2011-12-31'
 
-    daily_output_path = os.path.join(save_path, "2011_Data_WithoutCV_Metrics_Exsame.csv")
+    daily_output_path = os.path.join(save_path, "2011_HarvardBased_FtA.csv")
     start_daily_data_fusion(
         model_file,
         monitor_file,
         region_table_file,
         daily_output_path,
         monitor_pollutant="Conc",
-        model_pollutant="O3_MDA8",
+        model_pollutant="MDA8_O3",
         start_date=start_date,
         end_date=end_date
     )
