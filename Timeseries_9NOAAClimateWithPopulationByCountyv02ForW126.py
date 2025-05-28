@@ -112,7 +112,7 @@ method_display_names = {
 }
 
 # 定义Periods（可自定义）
-periods = ['DJF', 'MAM', 'JJA', 'SON', 'Annual', 'Apr-Sep']
+periods = ['W126']
 
 # 定义不同方法的标记样式
 method_markers = {
@@ -125,7 +125,7 @@ method_markers = {
 }
 
 # 自定义Y轴范围（如果为None则自动计算）
-y_limits = (22.7, 65)  # 自动计算范围
+y_limits = (0, 28)  #  # 针对所有变量统一设置Y轴范围,对于top-10的变量，Y轴范围为(49, 96),其余指标(22.7,65),W126为(0,28)
 
 # 读取原始数据
 years = list(range(2002, 2020))
@@ -133,7 +133,7 @@ all_data = pd.DataFrame()
 
 print("正在读取每年的数据...")
 for year in tqdm(years):
-    file_path = f'/DeepLearning/mnt/shixiansheng/data_fusion/output/DailyData_WithoutCV/{year}_Data_WithoutCV_Metrics.csv'
+    file_path = f'/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/{year}_W126_AtF.csv'
     try:
         data = pd.read_csv(file_path)
         data['Year'] = year
@@ -265,7 +265,7 @@ for period in tqdm(periods, desc="处理时间段"):
         
         plt.title(f'{period}: {climate_region} O₃ Population-Weighted Time Series (2002-2019)', fontsize=16)
         plt.xlabel('Year', fontsize=14)
-        plt.ylabel('Population-Weighted O₃ (ppbv)', fontsize=13)
+        plt.ylabel('Population-Weighted O₃ (ppm-hrs)', fontsize=13)
         plt.grid(True, linestyle='--', alpha=0.7)
         plt.xticks(years, rotation=45, fontsize=15)
         plt.yticks(fontsize=15)

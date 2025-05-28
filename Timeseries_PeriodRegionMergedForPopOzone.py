@@ -6,7 +6,7 @@ periods = ['DJF', 'MAM', 'JJA', 'SON', 'Apr-Sep', 'Annual', 'top-10', 'W126']
 
 # 定义基础路径和输出文件夹
 base_path = "/DeepLearning/mnt/shixiansheng/data_fusion/output/9ClimateRegion_PopWeightedCountyBased_Timeseries"
-output_folder = "/DeepLearning/mnt/shixiansheng/data_fusion/output/9ClimateRegion_PopWeightedCountyBased_Timeseries_Merged"
+output_folder = "/DeepLearning/mnt/shixiansheng/data_fusion/output/9ClimateRegion_PopWeightedCountyBased_Timeseries_W126AtF_Merged"
 
 # 确保输出文件夹存在
 if not os.path.exists(output_folder):

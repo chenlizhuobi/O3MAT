@@ -161,7 +161,7 @@ def plot_us_map(
 
             fig = show_maps(
                 dict_data,
-                unit=variable_settings['settings'].get('unit', "ppbv"),
+                unit=variable_settings['settings'].get('unit', "ppm-hrs"),
                 cmap=variable_settings['settings'].get('cmap_conc', cmap_conc),
                 show_lonlat=variable_settings['settings'].get('show_lonlat', False),
                 projection=proj,
@@ -195,7 +195,7 @@ def plot_us_map(
             for period in combination:
                 images = []
                 period_label = period
-                for variable in ['model', 'vna_ozone', 'evna_ozone', 'avna_ozone', 'ds_ozone','harvard_ml']:
+                for variable in ['model', 'vna_ozone', 'evna_ozone', 'avna_ozone']:
                     dataset_label = get_dataset_label(variable, fusion_output_file)
                     title = f"{period_label}: {dataset_label}" if period_label else f"{dataset_label}"
                     image_path = os.path.join(save_path, f"{title}.png")
@@ -235,15 +235,15 @@ def plot_us_map(
 
 if __name__ == "__main__":
     model_file = r"/backupdata/data_EPA/EQUATES/EQUATES_data/HR2DAY_LST_ACONC_v532_cb6r3_ae7_aq_WR413_MYR_STAGE_2011_12US1_2011.nc"
-    file_list = ["/DeepLearning/mnt/shixiansheng/data_fusion/output/Timeseries/thiel_sen_slope_results.csv"]
+    file_list = ["/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_Timeseries/thiel_sen_slope_results.csv"]
                  
     # special metrics
     # key_periods = ['DJF']
     # key_periods = ['W126']
-    key_periods = ['DJF', 'MAM', 'JJA', 'SON', 'Annual', 'Apr-Sep','top-10']
+    key_periods = ['W126']
 
     common_settings = {
-        'unit': "ppbv",
+        'unit': "ppm-hrs/year",
         'cmap_conc': cmaps.ViBlGrWhYeOrRe,
        'show_lonlat': True,
         'is_wrf_out_data': True,
@@ -259,7 +259,7 @@ if __name__ == "__main__":
     }
 
     variable_settings = {
-        'variables': ['model', 'vna_ozone', 'evna_ozone', 'avna_ozone', 'ds_ozone', 'harvard_ml'],
+        'variables': ['model', 'vna_ozone', 'evna_ozone', 'avna_ozone'],
         # 'variables': ['model'],
        'settings': common_settings
     }

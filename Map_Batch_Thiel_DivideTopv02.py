@@ -17,7 +17,6 @@ from esil.map_helper import get_multiple_data, show_maps
 import cmaps
 
 cmap_conc = cmaps.WhiteBlueGreenYellowRed
-cmaq_conc = cmaps.ViBlGrWhYeOrRe
 
 
 def extract_key_period(period):
@@ -25,13 +24,6 @@ def extract_key_period(period):
     for key in key_periods:
         if key in period:
             return key
-    return None
-
-
-def get_year(filename):
-    match = re.search(r"(20[0-2][0-9])", filename)
-    if match:
-        return match.group(1)
     return None
 
 
@@ -105,13 +97,10 @@ def plot_us_map(
         print("The data fusion file does not contain the Period column!")
         return
 
-    year = get_year(fusion_output_file)
-    if not year:
-        print("Could not extract year from the filename.")
-        return
+    # 移除了年份提取逻辑
 
-    save_path = os.path.join("/DeepLearning/mnt/shixiansheng/data_fusion/output", f"{year}_AloneMapDelta")
-    merged_path = os.path.join("/DeepLearning/mnt/shixiansheng/data_fusion/output", "MergedDelta")
+    save_path = os.path.join("/DeepLearning/mnt/shixiansheng/data_fusion/output/", "AloneMap_Thiel")
+    merged_path = os.path.join("/DeepLearning/mnt/shixiansheng/data_fusion/output", "Merged_Thiel")
     try:
         if not os.path.exists(save_path):
             os.makedirs(save_path)
@@ -133,7 +122,7 @@ def plot_us_map(
             continue
 
         df_period = df_data[df_data["Period"] == period]
-        period_label = f"{year}-2002_{key_period}" if key_period else f"{year}-2002"
+        period_label = key_period if key_period else ""
         period = (
             period.replace("_daily_DF", "")
            .replace("average", "Avg.")
@@ -151,15 +140,14 @@ def plot_us_map(
             value_range = variable_settings['settings'].get('value_range')
             if key_period == 'top-10':
                 # 这里设置 top-10 周期的独立 value_range，可根据需要修改
-                # value_range = (-37, 6.5)
-                value_range = (-35,35)  
+                value_range = (-1.5, 1.5)  
             elif value_range is None:
                 vmax_conc = np.nanpercentile(grid_concentration, 99.5)
                 vmin_conc = np.nanpercentile(grid_concentration, 0.5)
                 value_range = (vmin_conc, vmax_conc)
 
             dataset_label = get_dataset_label(variable, fusion_output_file)
-            title = f"{period_label}: {dataset_label}"
+            title = f"{period_label}: {dataset_label}" if period_label else f"{dataset_label}"
 
             dict_data = {}
             get_multiple_data(
@@ -206,11 +194,10 @@ def plot_us_map(
 
             for period in combination:
                 images = []
-                period_label = f"{year}-2002_{period}"
-                for variable in ['model', 'vna_ozone', 'evna_ozone', 'avna_ozone', 'ds_ozone']:
-                # for variable in ['model', 'vna_ozone', 'evna_ozone', 'avna_ozone', 'ds_ozone']:
+                period_label = period
+                for variable in ['model', 'vna_ozone', 'evna_ozone', 'avna_ozone', 'ds_ozone','harvard_ml']:
                     dataset_label = get_dataset_label(variable, fusion_output_file)
-                    title = f"{period_label}: {dataset_label}"
+                    title = f"{period_label}: {dataset_label}" if period_label else f"{dataset_label}"
                     image_path = os.path.join(save_path, f"{title}.png")
                     if os.path.exists(image_path):
                         img = Image.open(image_path)
@@ -241,24 +228,22 @@ def plot_us_map(
                         cropped_image = merged_image.crop((left, upper, right, lower))
 
                         # 保存合并后的图片到 Merged 文件夹
-                        merged_image_path = os.path.join(merged_path, f"{year}-2002_{period}_mergedDelta.png")
+                        merged_image_path = os.path.join(merged_path, f"{period_label}_mergedThiel.png" if period_label else "mergedThiel.png")
                         cropped_image.save(merged_image_path)
                         print(f"Merged and cropped image saved to {merged_image_path}")
 
 
 if __name__ == "__main__":
     model_file = r"/backupdata/data_EPA/EQUATES/EQUATES_data/HR2DAY_LST_ACONC_v532_cb6r3_ae7_aq_WR413_MYR_STAGE_2011_12US1_2011.nc"
-    file_list = ["/DeepLearning/mnt/shixiansheng/data_fusion/output/DailyData_WithoutCV_Delta/2019-2002_Data_WithoutCV_Metrics.csv"]
+    file_list = ["/DeepLearning/mnt/shixiansheng/data_fusion/output/DailyData_Timeseries/thiel_sen_slope_results.csv"]
                  
-    
-
     # special metrics
     # key_periods = ['DJF']
     # key_periods = ['W126']
     key_periods = ['DJF', 'MAM', 'JJA', 'SON', 'Annual', 'Apr-Sep','top-10']
 
     common_settings = {
-        'unit': "ppbv",
+        'unit': "ppbv/year",
         'cmap_conc': cmaps.ViBlGrWhYeOrRe,
        'show_lonlat': True,
         'is_wrf_out_data': True,
@@ -269,13 +254,12 @@ if __name__ == "__main__":
        'show_dependenct_colorbar': True,
        'show_domain_mean': True,
        'show_grid_line': True,
-        # 'value_range': (-19.2, 10.3),
-        'value_range': (-20, 20),
+        'value_range': (-1.5, 1.5),
         # 'value_range': (None,None),
     }
 
     variable_settings = {
-        'variables': ['model', 'vna_ozone', 'evna_ozone', 'avna_ozone', 'ds_ozone'],
+        'variables': ['model', 'vna_ozone', 'evna_ozone', 'avna_ozone', 'ds_ozone', 'harvard_ml'],
         # 'variables': ['model'],
        'settings': common_settings
     }

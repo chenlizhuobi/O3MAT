@@ -41,8 +41,7 @@ method_display_names = {
 }
 
 # 定义Periods（可自定义）
-periods = ['DJF', 'MAM', 'JJA', 'SON', 'Annual', 'Apr-Sep']
-periods = ['top-10']  # 示例：只处理top-10时段
+periods = ['W126']  # 示例：只处理top-10时段
 
 # 定义不同方法的标记样式
 method_markers = {
@@ -55,7 +54,7 @@ method_markers = {
 }
 
 # 自定义Y轴范围（如果为None则自动计算）
-y_limits = (46,96)  #  # 针对所有变量统一设置Y轴范围,对于top-10的变量，Y轴范围为(49, 96),其余指标(22.7,65),W126为(0,28)
+y_limits = (0,28)  #  # 针对所有变量统一设置Y轴范围,对于top-10的变量，Y轴范围为(49, 96),其余指标(22.7,65),W126为(0,28)
 
 # 读取原始数据
 years = list(range(2002, 2020))
@@ -63,7 +62,11 @@ all_data = pd.DataFrame()
 
 print("正在读取每年的数据...")
 for year in tqdm(years):
-    file_path = f'/DeepLearning/mnt/shixiansheng/data_fusion/output/DailyData_WithoutCV/{year}_Data_WithoutCV_Metrics.csv'
+    #FtA文件
+    file_path = f'/DeepLearning/mnt/shixiansheng/data_fusion/output/HourlyData_WithoutCV/{year}_W126_ST_Limit.csv'
+
+    #AtF文件
+    file_path = f'/DeepLearning/mnt/shixiansheng/data_fusion/output/W126_AtF/{year}_W126_AtF.csv'
     try:
         data = pd.read_csv(file_path)
         data['Year'] = year
@@ -150,7 +153,7 @@ for period in tqdm(periods, desc="处理时间段"):
         # 设置图表标题和轴标签
         plt.title(f'{period}: {region_name} O₃ Time Series (2002-2019)', fontsize=16)
         plt.xlabel('Year', fontsize=14)
-        plt.ylabel('O₃ (ppbv)', fontsize=14)  # 移除Concentration，直接使用O₃ (ppbv)
+        plt.ylabel('O₃ (ppm-hrs)', fontsize=14)  # 移除Concentration，直接使用O₃ (ppbv)
         
         plt.grid(True, linestyle='--', alpha=0.7)
         plt.xticks(years, rotation=45, fontsize=15)
